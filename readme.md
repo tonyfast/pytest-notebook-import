@@ -1,4 +1,6 @@
 
+[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/tonyfast/pytest-notebook-import/master?urlpath=lab/tree/readme.ipynb)
+
 Import the notebooks you desire to test in `test_.py`.
 
 
@@ -60,18 +62,13 @@ if __name__ == '__main__':
     ----------------------------------------------- benchmark: 1 tests -----------------------------------------------
     Name (time in ms)          Min       Max      Mean  StdDev    Median     IQR  Outliers     OPS  Rounds  Iterations
     ------------------------------------------------------------------------------------------------------------------
-    test_sleep            200.0609  205.1301  203.3461  2.0951  203.6494  3.0335       1;0  4.9177       5           1
+    test_sleep            200.5592  205.1243  202.7852  2.0669  202.4509  3.8508       2;0  4.9313       5           1
     ------------------------------------------------------------------------------------------------------------------
     
     Legend:
       Outliers: 1 Standard Deviation from Mean; 1.5 IQR (InterQuartile Range) from 1st Quartile and 3rd Quartile.
       OPS: Operations Per Second, computed as 1 / Mean
-    ============================= warnings summary =============================
-    None
-      Module already imported so cannot be rewritten: pytest_cov
-      Module already imported so cannot be rewritten: pytest_benchmark
-      Module already imported so cannot be rewritten: hypothesis
-    
-    -- Docs: http://doc.pytest.org/en/latest/warnings.html
-    =================== 3 passed, 3 warnings in 1.62 seconds ===================
+    ========================= 3 passed in 2.79 seconds =========================
+    [NbConvertApp] Converting notebook readme.ipynb to markdown
+    [NbConvertApp] Writing 2829 bytes to readme.md
 
