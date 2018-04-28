@@ -1,2 +1,5 @@
+importnb
+pytest
 hypothesis
 pytest-cov
+pytest-benchmark
