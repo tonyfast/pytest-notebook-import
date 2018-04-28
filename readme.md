@@ -1,20 +1,6 @@
 
 [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/tonyfast/pytest-notebook-import/master?urlpath=lab/tree/readme.ipynb)
 
-Import the notebooks you desire to test in `test_.py`.
-
-
-```python
-%%file test_.py
-__import__('importnb').load_ipython_extension()
-from a_test_notebook import *
-```
-
-    Overwriting test_.py
-
-
-> `test_.py` is the most minimal name to trigger tests.
-
 Import pytest plugins for hypothesis, coverage, and benchmarking.
 
 
@@ -34,9 +20,41 @@ We can even create test fixtures in a notebook and load them into `conftest.py`
 
 
 ```python
+%%file test_py.py
+def test_py(): assert True
+```
+
+    Overwriting test_py.py
+
+
+
+```python
+%%file pytest.ini
+[pytest]
+python_files=test_*.['ipynb', 'py']
+```
+
+    Overwriting pytest.ini
+
+
+
+```python
 %%file conftest.py
-__import__('importnb').load_ipython_extension()
-from fixtures import *
+
+import pytest
+from importnb import Notebook
+
+with Notebook():  
+    from fixtures import *
+
+def pytest_collect_file(parent, path):
+    if path.ext in (".ipynb", ".py"):
+        return Module(path, parent)
+    
+class Module(pytest.Module):
+    def collect(self):
+        with Notebook(): 
+            return super().collect()
 ```
 
     Overwriting conftest.py
@@ -52,23 +70,27 @@ if __name__ == '__main__':
     =========================== test session starts ============================
     platform darwin -- Python 3.6.3, pytest-3.5.1, py-1.5.3, pluggy-0.6.0
     benchmark: 3.1.1 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
-    rootdir: /Users/tonyfast/_test, inifile:
+    rootdir: /Users/tonyfast/_test, inifile: pytest.ini
     plugins: cov-2.5.1, benchmark-3.1.1, hypothesis-3.56.5
-    collected 3 items
+    collected 4 items / 1 errors
     
-    test_.py ...                                                         [100%]
+    ================================== ERRORS ==================================
+    _________________________ ERROR collecting test.py _________________________
+    ImportError while importing test module '/Users/tonyfast/_test/test.py'.
+    Hint: make sure your test modules/packages have valid Python names.
+    Traceback:
+    test.py:2: in <module>
+        from a_test_notebook import *
+    E   ModuleNotFoundError: No module named 'a_test_notebook'
+    ============================= warnings summary =============================
+    None
+      Module already imported so cannot be rewritten: pytest_cov
+      Module already imported so cannot be rewritten: pytest_benchmark
+      Module already imported so cannot be rewritten: hypothesis
     
-    
-    ----------------------------------------------- benchmark: 1 tests -----------------------------------------------
-    Name (time in ms)          Min       Max      Mean  StdDev    Median     IQR  Outliers     OPS  Rounds  Iterations
-    ------------------------------------------------------------------------------------------------------------------
-    test_sleep            200.5592  205.1243  202.7852  2.0669  202.4509  3.8508       2;0  4.9313       5           1
-    ------------------------------------------------------------------------------------------------------------------
-    
-    Legend:
-      Outliers: 1 Standard Deviation from Mean; 1.5 IQR (InterQuartile Range) from 1st Quartile and 3rd Quartile.
-      OPS: Operations Per Second, computed as 1 / Mean
-    ========================= 3 passed in 2.79 seconds =========================
+    -- Docs: http://doc.pytest.org/en/latest/warnings.html
+    !!!!!!!!!!!!!!!!! Interrupted: 1 errors during collection !!!!!!!!!!!!!!!!!!
+    =================== 3 warnings, 1 error in 0.11 seconds ====================
     [NbConvertApp] Converting notebook readme.ipynb to markdown
-    [NbConvertApp] Writing 2829 bytes to readme.md
+    [NbConvertApp] Writing 2603 bytes to readme.md
 
