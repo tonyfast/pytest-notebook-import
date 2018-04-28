@@ -44,17 +44,14 @@ python_files=test_*.['ipynb', 'py']
 import pytest
 from importnb import Notebook
 
-with Notebook():  
-    from fixtures import *
+with Notebook(): from fixtures import *
 
 def pytest_collect_file(parent, path):
-    if path.ext in (".ipynb", ".py"):
-        return Module(path, parent)
+    if path.ext in (".ipynb", ".py"): return Module(path, parent)
     
 class Module(pytest.Module):
     def collect(self):
-        with Notebook(): 
-            return super().collect()
+        with Notebook(): return super().collect()
 ```
 
     Overwriting conftest.py
@@ -72,25 +69,6 @@ if __name__ == '__main__':
     benchmark: 3.1.1 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
     rootdir: /Users/tonyfast/_test, inifile: pytest.ini
     plugins: cov-2.5.1, benchmark-3.1.1, hypothesis-3.56.5
-    collected 4 items / 1 errors
+    collected 4 items
     
-    ================================== ERRORS ==================================
-    _________________________ ERROR collecting test.py _________________________
-    ImportError while importing test module '/Users/tonyfast/_test/test.py'.
-    Hint: make sure your test modules/packages have valid Python names.
-    Traceback:
-    test.py:2: in <module>
-        from a_test_notebook import *
-    E   ModuleNotFoundError: No module named 'a_test_notebook'
-    ============================= warnings summary =============================
-    None
-      Module already imported so cannot be rewritten: pytest_cov
-      Module already imported so cannot be rewritten: pytest_benchmark
-      Module already imported so cannot be rewritten: hypothesis
-    
-    -- Docs: http://doc.pytest.org/en/latest/warnings.html
-    !!!!!!!!!!!!!!!!! Interrupted: 1 errors during collection !!!!!!!!!!!!!!!!!!
-    =================== 3 warnings, 1 error in 0.11 seconds ====================
-    [NbConvertApp] Converting notebook readme.ipynb to markdown
-    [NbConvertApp] Writing 2603 bytes to readme.md
-
+    test_notebook.ipynb ..
